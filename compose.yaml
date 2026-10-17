@@ -1,0 +1,48 @@
+# Strata serving Qwen3.8-Flash-Next (Unsloth UD-IQ4_XS, ~88 GiB in 3 shards) on
+# BOTH V100s via layer split. Port 8184. Build the image first:
+#   docker build --build-arg CUDA_ARCHITECTURES=70 -t strata-v100:local .
+# (from a Strata checkout with Dockerfile.volta.patch applied — the stock CUDA 13
+#  image cannot run on Volta.)
+#
+# Weights are reused in place from the host via GGUF_DIR (no download, no copy);
+# the named volume holds only the pack, MTP layer and install config.
+# KV=int8 + GPUS=0,1 match Strata's documented V100 reference config.
+#
+# First start runs setup inside the container (GGUF verify + pack + ~6 GB MTP
+# download); the port opens only after the model loads. Once healthy, bake the
+# first-start-compiled Volta engine into the image so recreations skip the ~9 min
+# recompile:   docker commit <container> strata-v100:local
+# stop_grace_period must stay generous: Strata releases page-locked RAM slowly.
+# To change model settings later, add REINSTALL=1 to environment once and recreate.
+services:
+  strata:
+    image: strata-v100:local
+    container_name: qwen38-flash-next-strata
+    restart: unless-stopped
+    ports:
+      - "8184:8184"
+    environment:
+      - FAMILY=unsloth
+      - MODEL=UD-IQ4_XS
+      - CONTEXT=32768
+      - VISION=yes
+      - KV=int8
+      - GPUS=0,1
+      - PORT=8184
+      - HOST=0.0.0.0
+      - GGUF_DIR=/models/Qwen3.8-Flash-Next
+    volumes:
+      - /home/YOURUSER/models:/models:ro
+      - strata-data:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ulimits:
+      memlock: -1
+    stop_grace_period: 120s
+volumes:
+  strata-data:

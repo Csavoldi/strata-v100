@@ -1,0 +1,23 @@
+# Oh My Pi provider entry for a Strata server (OpenAI-compatible).
+# Merge into ~/.omp/agent/models.yml and reference as
+#   modelRoles:
+#     default: strata/qwen3.8-flash-next-unsloth-ud-iq4_xs
+# in ~/.omp/agent/config.yml.
+# reasoning: true exposes OMP's thinking levels (the model emits reasoning_content);
+# supportsTools: true verified against Strata's tool_calls implementation.
+providers:
+  strata:
+    baseUrl: http://<gpu-host>:8184/v1
+    api: openai-completions
+    auth: none
+    models:
+    - id: qwen3.8-flash-next-unsloth-ud-iq4_xs
+      name: Qwen3.8-Flash-Next UD-IQ4_XS (Strata, 2x V100)
+      reasoning: true
+      input:
+      - text
+      - image
+      contextWindow: 32768
+      maxTokens: 8192
+      repetitionPenalty: 1.0
+      supportsTools: true
