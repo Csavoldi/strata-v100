@@ -4,7 +4,7 @@ Run [Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) (125B-t
 hybrid MoE) with [Strata](https://github.com/Niko1221/Strata) on a pair of Volta cards, as a
 Dockge-managed Docker stack.
 
-**Measured on 2× V100-PCIE-32GB, Unsloth UD-IQ4_XS, int8 KV, MTP spec-4, 32K context:
+**Measured on 2× V100-PCIE-32GB, Unsloth UD-IQ4_XS, int8 KV, MTP spec-4, 128K context:
 53–58 tok/s decode — ~45% faster than the llama.cpp baseline (37.3 tok/s) on the same
 weights and GPUs — with vision working and both cards layer-split to ~32 GB each.**
 
@@ -89,7 +89,7 @@ services:
     environment:
       - FAMILY=unsloth
       - MODEL=UD-IQ4_XS
-      - CONTEXT=32768
+      - CONTEXT=131072
       - VISION=yes
       - KV=int8
       - GPUS=0,1
@@ -141,8 +141,8 @@ providers:
       name: Qwen3.8-Flash-Next UD-IQ4_XS (Strata, 2x V100)
       reasoning: true
       input: [text, image]
-      contextWindow: 32768
-      maxTokens: 8192
+      contextWindow: 131072
+      maxTokens: 16384
       supportsTools: true
 ```
 

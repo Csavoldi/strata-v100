@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-10-17T19:11:02.393Z",
+  "sessionId": "sess_6a2eabf8-1abe-455c-8790-f31c54e67301",
+  "event": "PostToolUse",
+  "toolName": "Edit",
+  "file": "/home/dogda/Documents/dockge-models/stacks/qwen38-flash-next-strata/compose.yaml",
+  "outcome": "clear",
+  "coverage": "complete",
+  "findingCount": 0,
+  "durationMs": 1,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

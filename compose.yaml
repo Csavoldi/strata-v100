@@ -24,7 +24,7 @@ services:
     environment:
       - FAMILY=unsloth
       - MODEL=UD-IQ4_XS
-      - CONTEXT=32768
+      - CONTEXT=131072
       - VISION=yes
       - KV=int8
       - GPUS=0,1
