@@ -157,6 +157,20 @@ VRAM: ~32 GB on each card (a small TTS container coexisted on GPU 1). RAM budget
 experts: 23 GiB pinned; with 64 GB total VRAM all ~59.5 GB of routed experts stay resident
 — no SSD spill.
 
+## Server hardware (the benchmark machine)
+
+| Component | Detail |
+|---|---|
+| GPU | 2× Tesla V100-PCIE-32GB (sm_70), PCIe Gen3 x16 each, no NVLink — layer split needs only host RAM hand-off |
+| CPU | 2× Intel Xeon E5-2682 v4 @ 2.50 GHz (Broadwell-EP, 2 sockets, 2 NUMA nodes, 64 threads) |
+| RAM | 47 GiB (Strata pins ~23 GiB for the expert cache; the rest of the experts live in VRAM) |
+| Disk | 500 GB virtual disk (this runs in a QEMU/Q35 VM with both V100s passed through — no bare metal required) |
+| OS / driver | Debian 13 (trixie), kernel 6.12, NVIDIA driver 580.173.02, nvidia-container-toolkit |
+
+Nothing exotic: a 2016-era dual-socket board with a pair of secondhand V100s and 48 GB of RAM
+is enough for the numbers above. AVX2 CPUs are required by the prebuilt engine; without AVX2,
+build the image on the target machine itself.
+
 ## Credits
 
 - [Strata](https://github.com/Niko1221/Strata) — the engine and quant tooling; read
